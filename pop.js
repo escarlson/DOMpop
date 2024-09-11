@@ -7,3 +7,9 @@ function popElements(htmlIn, tag) {
   let outputTextarea = document.getElementById('htmlOutput');
   outputTextarea.value = htmlOut;
 }
+
+function copyOutputToInput() {
+  let inputTextarea = document.getElementById('htmlInput');
+  let outputTextarea = document.getElementById('htmlOutput');
+  inputTextarea.value = outputTextarea.value;
+}
