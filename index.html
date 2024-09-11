@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html lang="en">
   <head>
     <title>
@@ -14,14 +15,14 @@
         <form class="row g-3 p-5">
           <div class="mb-3">
             <label for="htmlInput" class="form-label">HTML Input</label>
-            <textarea id="htmlInput" name="htmlInput" class="form-control" type="text" placeholder="Paste HTML here" rows="5"></textarea>
+            <textarea id="htmlInput" name="htmlInput" class="form-control" placeholder="Paste HTML here" rows="5"></textarea>
           </div>
           <div class="col-12">
             <button type="button" id="popBtn" class="btn btn-primary" onClick="popElements(document.getElementById('htmlInput').value, 'b')">Pop it!</button>
           </div>
           <div class="mb-3">
             <label for="htmlOutput" class="form-label">HTML Output</label>
-            <textarea id="htmlOutput" name="htmlOutput" class="form-control" type="text" placeholder="Modified HTML appears here" rows="5"></textarea>
+            <textarea id="htmlOutput" name="htmlOutput" class="form-control" placeholder="Modified HTML appears here" rows="5"></textarea>
           </div>
           <div class="col-12">
             <button type="button" id="copyBtn" class="btn btn-secondary" onClick="copyOutputToInput()">Copy output to input</button>
