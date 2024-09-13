@@ -1,11 +1,31 @@
-function popElements(htmlIn, tag) {
-  let tempDiv = document.createElement('div');
-  tempDiv.innerHTML = htmlIn;
-  let selectedTags = tempDiv.querySelectorAll(tag);
-  selectedTags.forEach(tag => {tag.replaceWith(tag.innerHTML);})
-  let htmlOut = tempDiv.innerHTML;
-  let outputTextarea = document.getElementById('htmlOutput');
-  outputTextarea.value = htmlOut;
+function popElements(htmlInput, tagToRemove) {
+  // Create a DOM parser
+  const parser = new DOMParser();
+  const doc = parser.parseFromString(htmlInput, 'text/html');
+  
+  // Get all elements matching the tag you want to remove
+  const elementsToRemove = doc.querySelectorAll(tagToRemove);
+
+  // For each element, replace it with its inner content
+  elementsToRemove.forEach(el => {
+      while (el.firstChild) {
+          el.parentNode.insertBefore(el.firstChild, el);
+      }
+      el.remove();  // Remove the div element itself
+  });
+
+  // Serialize the modified DOM back to HTML
+  let outputHTML = doc.body.innerHTML;
+
+  // Remove empty lines
+  outputHTML = outputHTML
+    .split('\n')                          // Split output into lines
+    .map(line => line.trim())             // Trim whitespace from each line
+    .filter(line => line.length > 0)      // Filter out empty or whitespace-only lines
+    .join('\n');                          // Join the lines back together
+
+  // Output the modified HTML without escaping characters
+  document.getElementById('htmlOutput').value = outputHTML;
 }
 
 function copyOutputToInput() {
