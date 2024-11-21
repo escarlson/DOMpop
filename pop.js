@@ -1,17 +1,26 @@
-function popElements(htmlInput, tagToRemove) {
-  // Create a DOM parser
+function popElements(htmlInput, tagsToRemove, attributesToRemove) {
   const parser = new DOMParser();
   const doc = parser.parseFromString(htmlInput, 'text/html');
-  
-  // Get all elements matching the tag you want to remove
-  const elementsToRemove = doc.querySelectorAll(tagToRemove);
 
-  // For each element, replace it with its inner content
-  elementsToRemove.forEach(el => {
+  // Remove elements
+  tagsToRemove.forEach(tag => {
+    const elementsToRemove = doc.querySelectorAll(tag);
+    elementsToRemove.forEach(el => {
       while (el.firstChild) {
-          el.parentNode.insertBefore(el.firstChild, el);
+        el.parentNode.insertBefore(el.firstChild, el);
       }
-      el.remove();  // Remove the div element itself
+      el.remove();
+    });
+  });
+
+  // Remove attributes
+  const allElements = doc.querySelectorAll('*');
+  allElements.forEach(el => {
+    attributesToRemove.forEach(attr => {
+      if (el.hasAttribute(attr)) {
+        el.removeAttribute(attr);
+      }
+    });
   });
 
   // Serialize the modified DOM back to HTML
@@ -19,14 +28,14 @@ function popElements(htmlInput, tagToRemove) {
 
   // Remove empty lines
   outputHTML = outputHTML
-    .split('\n')                          // Split output into lines
-    .map(line => line.trim())             // Trim whitespace from each line
-    .filter(line => line.length > 0)      // Filter out empty or whitespace-only lines
-    .join('\n');                          // Join the lines back together
+    .split('\n')
+    .map(line => line.trim())
+    .filter(line => line.length > 0)
+    .join('\n');
 
-  // Output the modified HTML without escaping characters
   document.getElementById('htmlOutput').value = outputHTML;
 }
+
 
 function copyOutputToInput() {
   let inputTextarea = document.getElementById('htmlInput');
@@ -43,16 +52,21 @@ function enumerateElements() {
 
   // Store unique elements in a set
   let tagNames = new Set();
+  let attributeNames = new Set();
 
   // Loop through the elements and add their tag names to the set
   allElements.forEach(element => {
     tagNames.add(element.tagName.toLowerCase());
+    Array.from(element.attributes).forEach(attr => {
+      attributeNames.add(attr.name.toLowerCase());
+    });
   });
 
   // Convert to array
   let tagList = Array.from(tagNames);
   console.log(tagList);
 
+  // Populate element checkboxes
   const elementsCheckboxes = document.getElementById('elementsCheckboxes');
   elementsCheckboxes.innerHTML = '';  // Clear previous checkboxes
   tagList.forEach((tag, index) => {
@@ -74,6 +88,29 @@ function enumerateElements() {
       listItem.appendChild(label);
       elementsCheckboxes.appendChild(listItem);
   });
+
+  // Populate attribute checkboxes
+  const attributesCheckboxes = document.getElementById('attributesCheckboxes');
+  attributesCheckboxes.innerHTML = '';
+  Array.from(attributeNames).forEach((attr, index) => {
+    const listItem = document.createElement('li');
+    listItem.className = 'list-group-item';
+
+    const checkbox = document.createElement('input');
+    checkbox.type = 'checkbox';
+    checkbox.className = 'form-check-input me-1';
+    checkbox.value = attr;
+    checkbox.id = `attributeCheckbox${index}`;
+
+    const label = document.createElement('label');
+    label.className = 'form-check-label';
+    label.htmlFor = checkbox.id;
+    label.innerText = attr;
+
+    listItem.appendChild(checkbox);
+    listItem.appendChild(label);
+    attributesCheckboxes.appendChild(listItem);
+  });
 }
 
 function getCheckedElements() {
@@ -86,4 +123,11 @@ function getCheckedElements() {
       .map(checkbox => checkbox.value);
   
   return checkedValues;
+}
+
+function getCheckedAttributes() {
+  const checkboxes = document.querySelectorAll('#attributesCheckboxes input[type="checkbox"]');
+  return Array.from(checkboxes)
+    .filter(checkbox => checkbox.checked)
+    .map(checkbox => checkbox.value);
 }

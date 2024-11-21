@@ -18,9 +18,15 @@
             <textarea id="htmlInput" name="htmlInput" class="form-control" placeholder="Paste HTML here" rows="5" onchange="enumerateElements()"></textarea>
           </div>
           <div class="col-12">
+            <p>DOM Elements:</p>
             <ul class="list-group list-group-horizontal mb-3" id="elementsCheckboxes">
+              <li style="margin-left: 25px;">No elements</li>
             </ul>
-            <button type="button" id="popBtn" class="btn btn-primary" onClick="popElements(document.getElementById('htmlInput').value, getCheckedElements())">Pop it!</button>
+            <p>Attributes:</p>
+            <ul class="list-group list-group-horizontal mb-3" id="attributesCheckboxes">
+              <li style="margin-left: 25px;">No attributes</li>
+            </ul>
+            <button type="button" id="popBtn" class="btn btn-primary" onClick="popElements(document.getElementById('htmlInput').value, getCheckedElements(), getCheckedAttributes())">Pop it!</button>
           </div>
           <div class="mb-3">
             <label for="htmlOutput" class="form-label">HTML Output</label>
